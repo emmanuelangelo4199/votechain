@@ -24,8 +24,8 @@ export function useVotingProgram() {
 }
 
 export async function fetchAllPolls(program: Program) {
-  const polls = await program.account.poll.all();
-  return polls.map((p) => ({
+  const polls = await (program.account as any).poll.all();
+  return polls.map((p: any) => ({
     publicKey: p.publicKey.toString(),
     account: {
       authority: (p.account as any).authority.toString(),
@@ -74,7 +74,7 @@ export async function checkIfVoted(
       [Buffer.from('vote'), pollPubkey.toBuffer(), voter.toBuffer()],
       PROGRAM_ID
     );
-    const record = await program.account.voteRecord.fetch(voteRecordPda);
+    const record = await (program.account as any).voteRecord.fetch(voteRecordPda);
     return (record as any).optionIndex;
   } catch { return null; }
 }

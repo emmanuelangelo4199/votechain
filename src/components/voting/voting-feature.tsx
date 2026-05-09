@@ -51,7 +51,7 @@ export function PollDetail({ pollKey }: { pollKey: string }) {
     if (!program) return;
     try {
       const pk = new PublicKey(pollKey);
-      const data = await program.account.poll.fetch(pk);
+      const data = await (program.account as any).poll.fetch(pk);
       setPoll({
         publicKey: pollKey,
         account: {
