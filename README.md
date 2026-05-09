@@ -1,88 +1,190 @@
-# decentralized-voting
+# 🗳️ VoteChain — Decentralized Voting on Solana
 
-This is a Next.js app containing:
+> **Transparent. Trustless. On-Chain.**
 
-- Tailwind CSS setup for styling
-- Useful wallet UI elements setup using [@solana/web3.js](https://www.npmjs.com/package/@solana/web3.js)
-- A basic Counter Solana program written in Anchor
-- UI components for interacting with the Counter program
+A full-stack decentralized voting DApp built on Solana Devnet. Users can create polls, cast votes, and view live results — all secured on-chain with wallet authentication and double-vote prevention.
 
-## Getting Started
+**Live Demo:** https://votechain-yhoz-nhgjum2gh-angelos-projects-ac88254f.vercel.app/
+
+---
+
+## ✨ Features
+
+- 🗳️ **Create polls** with up to 4 options and a custom duration
+- ✅ **One vote per wallet** — enforced by on-chain PDA constraints
+- 📊 **Live results** with animated progress bars
+- ⏱️ **Countdown timer** — polls auto-expire at the set time
+- 🔐 **Wallet authentication** via Solflare / Phantom
+- 🔗 **Transaction transparency** — every action links to Solana Explorer
+- 📱 **Responsive** — works on mobile and desktop
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Smart Contract | Rust + Anchor Framework |
+| Blockchain | Solana Devnet |
+| Frontend | Next.js 16 + TypeScript |
+| Styling | Tailwind CSS + Custom CSS |
+| Wallet | Solana Wallet Adapter (Solflare) |
+| Client | @coral-xyz/anchor + @solana/web3.js |
+| Deployment | Vercel (frontend) + Solana Devnet (program) |
+
+---
+
+## 🏗️ Architecture
+
+```
+votechain/
+├── anchor/                          # Solana smart contract
+│   ├── programs/voting/src/lib.rs   # Anchor program (Rust)
+│   └── Anchor.toml                  # Devnet config
+└── src/
+    ├── app/
+    │   ├── page.tsx                 # Home — polls list + hero
+    │   ├── create/page.tsx          # Create poll (4-step form)
+    │   └── poll/[pollId]/page.tsx   # Poll detail + voting UI
+    ├── components/
+    │   └── voting/
+    │       ├── voting-data-access.tsx  # Anchor client helpers
+    │       ├── voting-ui.tsx           # Shared UI components
+    │       └── voting-feature.tsx      # Page-level logic
+    └── lib/
+        └── voting-idl.json          # Generated Anchor IDL
+```
+
+---
+
+## 📋 Smart Contract
+
+**Program ID:** `Ax4euTS9vx3TFxgj7o2JSLmNeRQhG4Rm9JS53wZcWHKT`
+
+[View on Solana Explorer](https://explorer.solana.com/address/Ax4euTS9vx3TFxgj7o2JSLmNeRQhG4Rm9JS53wZcWHKT?cluster=devnet)
+
+### Instructions
+
+| Instruction | Description |
+|---|---|
+| `create_poll` | Creates a new poll with question, options, and duration |
+| `cast_vote` | Casts a vote — double-vote prevented by VoteRecord PDA |
+| `close_poll` | Closes a poll — authority only |
+
+### Account PDAs
+
+```rust
+// Poll PDA
+seeds = [b"poll", authority.key(), question.as_bytes()]
+
+// VoteRecord PDA (prevents double voting)
+seeds = [b"vote", poll.key(), voter.key()]
+```
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js v18+
+- Rust + Cargo
+- Solana CLI
+- Anchor CLI
 
 ### Installation
 
-#### Download the template
+```bash
+# Clone the repo
+git clone https://github.com/emmanuelangelo4199/votechain.git
+cd votechain
 
-```shell
-pnpm create solana-dapp@latest -t gh:solana-foundation/templates/web3js/decentralized-voting
+# Install dependencies
+npm install
+
+# Start dev server
+npm run dev
 ```
 
-#### Install Dependencies
+Open [http://localhost:3000](http://localhost:3000)
 
-```shell
-pnpm install
+### Deploy the Anchor Program
+
+```bash
+# Configure for Devnet
+solana config set --url devnet
+solana airdrop 2
+
+# Build and deploy
+cd anchor
+anchor build
+anchor deploy
 ```
 
-## Apps
+---
 
-### anchor
+## 🧪 Testing the DApp
 
-This is a Solana program written in Rust using the Anchor framework.
+1. Install [Solflare](https://solflare.com) browser extension
+2. Switch Solflare to **Devnet**
+3. Fund your wallet at [faucet.solana.com](https://faucet.solana.com)
+4. Connect wallet on the app
+5. Create a poll and cast a vote
+6. View your transaction on [Solana Explorer](https://explorer.solana.com/?cluster=devnet)
 
-#### Commands
+---
 
-You can use any normal anchor commands. Either move to the `anchor` directory and run the `anchor` command or prefix the
-command with `pnpm`, eg: `pnpm anchor`.
+## 🎨 Design
 
-#### Sync the program id:
+Custom blue palette inspired by deep ocean tones:
 
-Running this command will create a new keypair in the `anchor/target/deploy` directory and save the address to the
-Anchor config file and update the `declare_id!` macro in the `./src/lib.rs` file of the program.
+| Variable | Hex | Usage |
+|---|---|---|
+| `--prussian-blue` | `#00072d` | Page background |
+| `--deep-navy` | `#001c55` | Navbar, cards |
+| `--imperial-blue` | `#0a2472` | Borders, inputs |
+| `--cornflower-ocean` | `#0e6ba8` | Accents, buttons |
+| `--frosted-blue` | `#a6e1fa` | Text, highlights |
 
-You will manually need to update the constant in `anchor/lib/counter-exports.ts` to match the new program id.
+---
 
-```shell
-pnpm anchor keys sync
-```
+## 📸 Screenshots
 
-#### Build the program:
+### Home Page
+![Home](https://via.placeholder.com/800x400/00072d/a6e1fa?text=VoteChain+Home)
 
-```shell
-pnpm anchor-build
-```
+### Create Poll
+![Create Poll](https://via.placeholder.com/800x400/001c55/a6e1fa?text=Create+Poll+Form)
 
-#### Start the test validator with the program deployed:
+### Poll Detail + Voting
+![Poll Detail](https://via.placeholder.com/800x400/0a2472/a6e1fa?text=Poll+Detail+%2B+Results)
 
-```shell
-pnpm anchor-localnet
-```
+---
 
-#### Run the tests
+## 🔮 Roadmap
 
-```shell
-pnpm anchor-test
-```
+- [ ] NFT-gated polls (token holders only)
+- [ ] Multi-signature poll creation
+- [ ] Poll categories and search
+- [ ] Email/push notifications on poll results
+- [ ] Mainnet deployment
 
-#### Deploy to Devnet
+---
 
-```shell
-pnpm anchor deploy --provider.cluster devnet
-```
+## 👨‍💻 Built By
 
-### web
+**Emmanuel Kwame Angelo Okwaraigwe**
+- GitHub: [@emmanuelangelo4199](https://github.com/emmanuelangelo4199)
+- Twitter/X: [@mrangelo4199](https://twitter.com/mrangelo4199)
 
-This is a React app that uses the Anchor generated client to interact with the Solana program.
+BSc Information Communication & Technology — University of Education Winneba
 
-#### Commands
+---
 
-Start the web app
+## 📄 License
 
-```shell
-pnpm dev
-```
+MIT License — see [LICENSE](./LICENSE) for details.
 
-Build the web app
+---
 
-```shell
-pnpm build
-```
+*Built with ❤️ on Solana*
