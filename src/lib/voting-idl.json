@@ -1,0 +1,326 @@
+{
+  "address": "Ax4euTS9vx3TFxgj7o2JSLmNeRQhG4Rm9JS53wZcWHKT",
+  "metadata": {
+    "name": "voting",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "cast_vote",
+      "discriminator": [
+        20,
+        212,
+        15,
+        189,
+        69,
+        180,
+        69,
+        151
+      ],
+      "accounts": [
+        {
+          "name": "poll",
+          "writable": true
+        },
+        {
+          "name": "vote_record",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  111,
+                  116,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "poll"
+              },
+              {
+                "kind": "account",
+                "path": "voter"
+              }
+            ]
+          }
+        },
+        {
+          "name": "voter",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "option_index",
+          "type": "u8"
+        }
+      ]
+    },
+    {
+      "name": "close_poll",
+      "discriminator": [
+        139,
+        213,
+        162,
+        65,
+        172,
+        150,
+        123,
+        67
+      ],
+      "accounts": [
+        {
+          "name": "poll",
+          "writable": true
+        },
+        {
+          "name": "authority",
+          "signer": true,
+          "relations": [
+            "poll"
+          ]
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "create_poll",
+      "discriminator": [
+        182,
+        171,
+        112,
+        238,
+        6,
+        219,
+        14,
+        110
+      ],
+      "accounts": [
+        {
+          "name": "poll",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  108,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "authority"
+              },
+              {
+                "kind": "arg",
+                "path": "question"
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "question",
+          "type": "string"
+        },
+        {
+          "name": "options",
+          "type": {
+            "vec": "string"
+          }
+        },
+        {
+          "name": "duration_seconds",
+          "type": "i64"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Poll",
+      "discriminator": [
+        110,
+        234,
+        167,
+        188,
+        231,
+        136,
+        153,
+        111
+      ]
+    },
+    {
+      "name": "VoteRecord",
+      "discriminator": [
+        112,
+        9,
+        123,
+        165,
+        234,
+        9,
+        157,
+        167
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "EmptyQuestion",
+      "msg": "Question cannot be empty."
+    },
+    {
+      "code": 6001,
+      "name": "QuestionTooLong",
+      "msg": "Question exceeds 200 characters."
+    },
+    {
+      "code": 6002,
+      "name": "TooFewOptions",
+      "msg": "Need at least 2 options."
+    },
+    {
+      "code": 6003,
+      "name": "TooManyOptions",
+      "msg": "Maximum 4 options allowed."
+    },
+    {
+      "code": 6004,
+      "name": "EmptyOption",
+      "msg": "Option cannot be empty."
+    },
+    {
+      "code": 6005,
+      "name": "OptionTooLong",
+      "msg": "Option exceeds 50 characters."
+    },
+    {
+      "code": 6006,
+      "name": "InvalidDuration",
+      "msg": "Duration must be greater than zero."
+    },
+    {
+      "code": 6007,
+      "name": "PollNotActive",
+      "msg": "Poll is not active."
+    },
+    {
+      "code": 6008,
+      "name": "PollExpired",
+      "msg": "Poll has expired."
+    },
+    {
+      "code": 6009,
+      "name": "InvalidOptionIndex",
+      "msg": "Invalid option index."
+    },
+    {
+      "code": 6010,
+      "name": "PollAlreadyClosed",
+      "msg": "Poll is already closed."
+    },
+    {
+      "code": 6011,
+      "name": "Unauthorized",
+      "msg": "Only the poll authority can perform this action."
+    }
+  ],
+  "types": [
+    {
+      "name": "Poll",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "question",
+            "type": "string"
+          },
+          {
+            "name": "options",
+            "type": {
+              "vec": "string"
+            }
+          },
+          {
+            "name": "vote_counts",
+            "type": {
+              "vec": "u64"
+            }
+          },
+          {
+            "name": "is_active",
+            "type": "bool"
+          },
+          {
+            "name": "created_at",
+            "type": "i64"
+          },
+          {
+            "name": "ends_at",
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "VoteRecord",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "voter",
+            "type": "pubkey"
+          },
+          {
+            "name": "poll",
+            "type": "pubkey"
+          },
+          {
+            "name": "option_index",
+            "type": "u8"
+          },
+          {
+            "name": "voted_at",
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ]
+}

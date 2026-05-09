@@ -2,10 +2,6 @@
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { Menu, X } from 'lucide-react'
-import { ThemeSelect } from '@/components/theme-select'
-import { ClusterUiSelect } from './cluster/cluster-ui'
 import { WalletButton } from '@/components/solana/solana-provider'
 
 export function AppHeader({ links = [] }: { links: { label: string; path: string }[] }) {
@@ -17,63 +13,113 @@ export function AppHeader({ links = [] }: { links: { label: string; path: string
   }
 
   return (
-    <header className="relative z-50 px-4 py-2 bg-neutral-100 dark:bg-neutral-900 dark:text-neutral-400">
-      <div className="mx-auto flex justify-between items-center">
-        <div className="flex items-baseline gap-4">
-          <Link className="text-xl hover:text-neutral-500 dark:hover:text-white" href="/">
-            <span>DecentralizedVoting</span>
-          </Link>
-          <div className="hidden md:flex items-center">
-            <ul className="flex gap-4 flex-nowrap items-center">
-              {links.map(({ label, path }) => (
-                <li key={path}>
-                  <Link
-                    className={`hover:text-neutral-500 dark:hover:text-white ${isActive(path) ? 'text-neutral-500 dark:text-white' : ''}`}
-                    href={path}
-                  >
-                    {label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
+    <header style={{
+      background: 'var(--deep-navy)',
+      borderBottom: '1px solid var(--imperial-blue)',
+      backdropFilter: 'blur(10px)',
+      padding: '0.85rem 2rem',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      position: 'sticky',
+      top: 0,
+      zIndex: 100,
+    }}>
+      {/* Brand */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
+        <Link href="/" style={{ textDecoration: 'none' }}>
+          <span style={{
+            fontSize: '1.4rem',
+            fontWeight: 800,
+            background: 'linear-gradient(90deg, #a6e1fa, #0e6ba8)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            letterSpacing: '0.04em',
+          }}>
+            🗳️ VoteChain
+          </span>
+        </Link>
 
-        <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setShowMenu(!showMenu)}>
-          {showMenu ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </Button>
-
-        <div className="hidden md:flex items-center gap-4">
-          <WalletButton />
-          <ClusterUiSelect />
-          <ThemeSelect />
-        </div>
-
-        {showMenu && (
-          <div className="md:hidden fixed inset-x-0 top-[52px] bottom-0 bg-neutral-100/95 dark:bg-neutral-900/95 backdrop-blur-sm">
-            <div className="flex flex-col p-4 gap-4 border-t dark:border-neutral-800">
-              <ul className="flex flex-col gap-4">
-                {links.map(({ label, path }) => (
-                  <li key={path}>
-                    <Link
-                      className={`hover:text-neutral-500 dark:hover:text-white block text-lg py-2  ${isActive(path) ? 'text-neutral-500 dark:text-white' : ''} `}
-                      href={path}
-                      onClick={() => setShowMenu(false)}
-                    >
-                      {label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-              <div className="flex flex-col gap-4">
-                <WalletButton />
-                <ClusterUiSelect />
-                <ThemeSelect />
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Desktop nav links */}
+        <nav style={{ display: 'flex', gap: '1.5rem' }} className="desktop-nav">
+          {links.map(({ label, path }) => (
+            <Link key={path} href={path} style={{
+              textDecoration: 'none',
+              fontSize: '0.95rem',
+              fontWeight: isActive(path) ? 700 : 400,
+              color: isActive(path) ? 'var(--frosted-blue)' : 'rgba(166,225,250,0.6)',
+              borderBottom: isActive(path) ? '2px solid var(--cornflower-ocean)' : '2px solid transparent',
+              paddingBottom: '2px',
+              transition: 'color 0.2s',
+            }}>
+              {label}
+            </Link>
+          ))}
+        </nav>
       </div>
+
+      {/* Right side */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        <WalletButton />
+
+        {/* Mobile menu toggle */}
+        <button
+          onClick={() => setShowMenu(!showMenu)}
+          style={{
+            display: 'none',
+            background: 'none',
+            border: '1px solid var(--cornflower-ocean)',
+            borderRadius: '8px',
+            color: 'var(--frosted-blue)',
+            padding: '0.4rem 0.6rem',
+            cursor: 'pointer',
+            fontSize: '1.1rem',
+          }}
+          className="mobile-menu-btn"
+        >
+          {showMenu ? '✕' : '☰'}
+        </button>
+      </div>
+
+      {/* Mobile dropdown */}
+      {showMenu && (
+        <div style={{
+          position: 'fixed',
+          top: '58px',
+          left: 0,
+          right: 0,
+          background: 'var(--deep-navy)',
+          borderBottom: '1px solid var(--imperial-blue)',
+          padding: '1.5rem 2rem',
+          zIndex: 99,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1rem',
+        }}>
+          {links.map(({ label, path }) => (
+            <Link key={path} href={path}
+              onClick={() => setShowMenu(false)}
+              style={{
+                textDecoration: 'none',
+                fontSize: '1.1rem',
+                color: isActive(path) ? 'var(--frosted-blue)' : 'rgba(166,225,250,0.7)',
+                fontWeight: isActive(path) ? 700 : 400,
+              }}>
+              {label}
+            </Link>
+          ))}
+          <div style={{ marginTop: '0.5rem' }}>
+            <WalletButton />
+          </div>
+        </div>
+      )}
+
+      <style>{`
+        @media (max-width: 768px) {
+          .desktop-nav { display: none !important; }
+          .mobile-menu-btn { display: block !important; }
+        }
+      `}</style>
     </header>
   )
 }
