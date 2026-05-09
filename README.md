@@ -148,19 +148,6 @@ Custom blue palette inspired by deep ocean tones:
 
 ---
 
-## 📸 Screenshots
-
-### Home Page
-![Home](https://via.placeholder.com/800x400/00072d/a6e1fa?text=VoteChain+Home)
-
-### Create Poll
-![Create Poll](https://via.placeholder.com/800x400/001c55/a6e1fa?text=Create+Poll+Form)
-
-### Poll Detail + Voting
-![Poll Detail](https://via.placeholder.com/800x400/0a2472/a6e1fa?text=Poll+Detail+%2B+Results)
-
----
-
 ## 🔮 Roadmap
 
 - [ ] NFT-gated polls (token holders only)
@@ -173,11 +160,10 @@ Custom blue palette inspired by deep ocean tones:
 
 ## 👨‍💻 Built By
 
-**Emmanuel Kwame Angelo Okwaraigwe**
+**Emmanuel Kwame Angelo **
 - GitHub: [@emmanuelangelo4199](https://github.com/emmanuelangelo4199)
 - Twitter/X: [@mrangelo4199](https://twitter.com/mrangelo4199)
 
-BSc Information Communication & Technology — University of Education Winneba
 
 ---
 
